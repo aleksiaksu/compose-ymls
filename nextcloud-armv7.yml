@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  db:
+    image: yobasystems/alpine-mariadb:arm32v7
+    restart: always
+    volumes:
+      - /mnt/data/portainer/aksucloud/db:/var/lib/mysql
+    environment:
+       MYSQL_ROOT_PASSWORD: (randompasshere)
+       MYSQL_DATABASE: nextclouddb
+       MYSQL_USER: dbuser
+       MYSQL_PASSWORD: (randompasshere)
+
+  app:
+    image: nextcloud
+    restart: always
+    ports:
+      - 8080:80
+    links:
+      - db
+    volumes:
+      - /mnt/data/portainer/aksucloud/nextcloud:/var/www/html
+    environment:
+      - MYSQL_PASSWORD=(randompasshere)
+      - MYSQL_DATABASE=nextclouddb
+      - MYSQL_USER=dbuser
+      - MYSQL_HOST=db
